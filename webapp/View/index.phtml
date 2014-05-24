@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-md-6">
+		<canvas id="humidity" width="350" height="350" style="width:50%"></canvas>
+		<canvas id="thermoP" width="105" height="340" style="width:16%"></canvas>
+		<canvas id="thermoA" width="105" height="340" style="width:16%"></canvas>
+		<p>Temperatura: <span class="vaso">vaso</span> e <span class="laboratorio">laboratorio</span>, valori attuali [°C]</p>		
+	</div>
+	
+	<div class="col-md-6">
+		<canvas id="historyT" width="600" height="250" style="width:95%"></canvas>
+		<p>Temperatura: <span class="vaso">vaso</span> e <span class="laboratorio">laboratorio</span>, ultime 24 ore [°C]</p>
+		<canvas id="historyH" width="600" height="250" style="width:95%"></canvas>
+		<p>Umidità, ultime 24 ore [%rel]</p>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function ()
+	{
+		var humidity = <?php echo $humidity; ?>,
+			t0 = <?php echo $t0; ?>,
+			t1 = <?php echo $t1; ?>,
+			serieH = <?php echo json_encode($serieH); ?>,
+			serieT0 = <?php echo json_encode($serieT0); ?>,
+			serieT1 = <?php echo json_encode($serieT1); ?>;
+		
+		new RGraph.Gauge('humidity', 0, 100, humidity).set('title', 'Umidità').grow();
+		new RGraph.Thermometer('thermoP', 0, 50, t0).grow();
+		new RGraph.Thermometer('thermoA', 0, 50, t1).set('colors', ['orange']).grow();
+		
+		new RGraph.Line('historyT', serieT0).set('colors', ['orange', 'red']).draw();
+		new RGraph.Line('historyT', serieT1).draw();
+		new RGraph.Line('historyH', serieH).set('colors', ['blue']).draw();
+		
+	})
+</script>
