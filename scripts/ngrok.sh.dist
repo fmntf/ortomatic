@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./ngrok -authtoken YOURKEY ubdomain=yourdomainname -httpauth="username:password" 8080
