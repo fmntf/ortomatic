@@ -37,7 +37,7 @@ class Service_Database
 	{
 		$this->db->exec("
 			CREATE TABLE thermal (
-				id INT PRIMARY KEY NOT NULL,
+				id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 				sensor_id INT NOT NULL,
 				value DECIMAL(5,2),
 				timestamp DATETIME
@@ -46,7 +46,7 @@ class Service_Database
 		
 		$this->db->exec("
 			CREATE TABLE humidity (
-				id INT PRIMARY KEY NOT NULL,
+				id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 				sensor_id INT NOT NULL,
 				value DECIMAL(5,2),
 				timestamp DATETIME
@@ -55,7 +55,7 @@ class Service_Database
 		
 		$this->db->exec("
 			CREATE TABLE picture (
-				id INT PRIMARY KEY NOT NULL,
+				id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 				camera_id INT NOT NULL,
 				filename VARCHAR(100),
 				estimated_canopy INTEGER,
@@ -64,8 +64,46 @@ class Service_Database
 		");
 	}
 	
-	public function writeTemperature($sensorId, $temperature)
+	public function insertTemperature($sensorId, $temperature)
 	{
-//		$this->db->
+		$statement = $this->db->prepare("
+			INSERT INTO thermal (sensor_id, value, timestamp)
+			VALUES (:sensorId, :value, :timestamp)
+		");
+		
+		$statement->bindParam(':sensorId', $sensorId);
+		$statement->bindParam(':value', $temperature);
+		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
+		
+		$statement->execute();
+	}
+	
+	public function insertHumidity($sensorId, $humidity)
+	{
+		$statement = $this->db->prepare("
+			INSERT INTO humidity (sensor_id, value, timestamp)
+			VALUES (:sensorId, :value, :timestamp)
+		");
+		
+		$statement->bindParam(':sensorId', $sensorId);
+		$statement->bindParam(':value', $humidity);
+		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
+		
+		$statement->execute();
+	}
+	
+	public function insertPicture($cameraId, $filename, $estimatedCanopy)
+	{
+		$statement = $this->db->prepare("
+			INSERT INTO picture (camera_id, filename, estimated_canopy, timestamp)
+			VALUES (:cameraId, :filename, :estimatedCanopy, :timestamp)
+		");
+		
+		$statement->bindParam(':cameraId', $cameraId);
+		$statement->bindParam(':filename', $filename);
+		$statement->bindParam(':estimatedCanopy', $estimatedCanopy);
+		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
+		
+		$statement->execute();
 	}
 }
