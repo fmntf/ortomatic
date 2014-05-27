@@ -23,10 +23,13 @@
 
 require_once "../webapp/autoloader.php";
 
+$humidity = new Service_Humidity();
+$temperature = new Service_Temperature();
+
 $db = new Service_Database();
 
-$db->insertTemperature(0, 24.3);
-$db->insertTemperature(1, 25.0);
-$db->insertHumidity(1, 25.0);
+$db->insertTemperature(0, $temperature->getActualValue(0));
+$db->insertTemperature(1, $temperature->getActualValue(1));
+$db->insertHumidity(0, $humidity->getActualValue(0));
 $db->insertPicture(0, 'xxx.jpg', 12345);
 
