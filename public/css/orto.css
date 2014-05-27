@@ -5,3 +5,16 @@
 .laboratorio {
 	color: orange;
 }
+
+.original-img canvas {
+	cursor: cell;
+}
+
+.selected-colors div {
+	height: 10px;
+}
+
+#slider .slider-selection {
+	background: #BABABA;
+}
+

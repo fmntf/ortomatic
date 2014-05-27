@@ -21,21 +21,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class Controller_Index extends Controller
+class Service_Humidity
 {
-    public function run()
+	public function getActualValue($sensorId)
 	{
-		$humidity = new Service_Humidity();
-		$temperature = new Service_Temperature();
-		
-		$this->viewVars = array(
-			'humidity' => $humidity->getActualValue(0),
-			't0' => $temperature->getActualValue(0),
-			't1' => $temperature->getActualValue(1),
-			'serieH' => [5.5,4,1,6,8,5,3],
-			'serieT0' => [5.5,4,1,6,8,5,3],
-			'serieT1' => [1,6,8,5,3,5.5,4],
-		);
-		$this->render('index');
+		return 64;
 	}
 }

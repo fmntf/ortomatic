@@ -1,0 +1,128 @@
+<link href="/css/slider.css" rel="stylesheet">
+<script src="/js/colorpicker.js"></script>
+<script src="/js/bootstrap-slider.js"></script>
+<script>
+$(function() {
+	$('.original-img img').canvas().click(function(e){
+		var color = e.rgb(),
+			hex = toHex(color[0]) + toHex(color[1]) + toHex(color[2]);
+		
+		$('.selected-colors').append('<div style="background-color:#'+hex+'" data-color="'+hex+'"></div>');
+		updatePreview();
+	});
+	
+	$('.salva').on('click', function() {
+		var config = getConfig();
+		if (!config) {
+			return false;
+		}
+		$('.salva span').removeClass('glyphicon-ok').addClass('glyphicon-refresh');
+		$.ajax({
+			url: '/configupdate/' + config.value + '/' + config.colors,
+			success: function() {
+				$('.salva span').removeClass('glyphicon-refresh').addClass('glyphicon-ok');
+			}
+		});
+	});
+	
+	$("#slider").slider();
+	$("#slider").on('slide', updatePreview);
+	$("#sliderInput").on('click', updatePreview);
+	
+	var requestRunning = false;
+	
+	function toHex (decimal) {
+		var v = decimal.toString(16);
+		if (v.length == 1) {
+			v = '0' + v;
+		}
+		return v;
+	}
+	
+	function updatePreview()
+	{
+		if (requestRunning) {
+			return;
+		}
+		
+		var config = getConfig();
+		if (!config) {
+			return;
+		}
+		
+		requestRunning = true;
+		$('img.preview').attr('src', '/preview/' + config.value + '/' + config.colors);
+		requestRunning = false;
+	}
+	
+	function getConfig()
+	{
+		var selectedColors = $('.selected-colors div'),
+			colors = [];
+	
+		if (selectedColors.length == 0) {
+			return;
+		}
+	
+		for (var i=0; i<selectedColors.length; i++) {
+			colors.push($(selectedColors[i]).data('color'));
+		}
+		
+		var value = $('#slider').data('value');
+		if (value instanceof Array) {
+			value = value[0];
+		}
+		
+		if (value === undefined) {
+			value = $('#slider').data('sliderValue');
+		}
+		
+		var allColors = colors.join('-');
+		
+		return {
+			value: value,
+			colors: allColors
+		};
+	}
+});
+</script>
+
+<div class="row">
+	<div class="col-md-6">
+		Immagine originale: <br>
+		<div class="original-img">
+			<img src="/image/test0">
+		</div>
+	</div>
+	<div class="col-md-6">
+		Anteprima:<br>
+		<img src="/image/test0" class="preview">
+	</div>
+</div>
+
+
+
+
+
+<div class="row">
+	<div class="col-md-2">
+		Fuzziness:
+		<input id="slider" data-slider-id='sliderInput' type="text" 
+			data-slider-min="0" data-slider-max="40"
+			data-slider-step="1" data-slider-value="10">
+	</div>
+	<div class="col-md-2">
+		Colori selezionati:
+		<div class="selected-colors"></div>
+	</div>
+	<div class="col-md-8">
+		<button class="btn btn-primary salva"><span class="glyphicon glyphicon-ok"></span> Salva</button>
+	</div>
+</div>
+
+
+
+
+
+
+

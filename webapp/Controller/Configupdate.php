@@ -21,21 +21,23 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class Controller_Index extends Controller
+class Controller_Configupdate extends Controller
 {
     public function run()
 	{
-		$humidity = new Service_Humidity();
-		$temperature = new Service_Temperature();
+		$fuzziness = $this->params[0];
+		$colors = explode('-', $this->params[1]);
 		
-		$this->viewVars = array(
-			'humidity' => $humidity->getActualValue(0),
-			't0' => $temperature->getActualValue(0),
-			't1' => $temperature->getActualValue(1),
-			'serieH' => [5.5,4,1,6,8,5,3],
-			'serieT0' => [5.5,4,1,6,8,5,3],
-			'serieT1' => [1,6,8,5,3,5.5,4],
-		);
-		$this->render('index');
+		$tmpFile = "/tmp/ortowebcam.jpg";
+		
+		$command = "convert /tmp/ortowebcam.jpg -fuzz $fuzziness% -fill red ";
+		foreach ($colors as $color) {
+			$command .= "-opaque \"#$color\" ";
+		}
+		$command .= "-quality 100 -format %c histogram:info: |grep FF0000 |awk '{print $1}' |sed 's/://'";
+		
+		$command = '#!/bin/bash' . PHP_EOL . PHP_EOL . $command . PHP_EOL;
+		
+		file_put_contents(__DIR__ . '/../../scripts/canopy.sh', $command);
 	}
 }
