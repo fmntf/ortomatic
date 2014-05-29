@@ -21,23 +21,29 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class Controller_Index extends Controller
-{
-    public function run()
-	{
-		$humidity = new Service_Humidity();
-		$temperature = new Service_Temperature();
-		
-		$db = new Service_Database();
-		
-		$this->viewVars = array(
-			'humidity' => $humidity->getActualValue(0),
-			't0' => $temperature->getActualValue(0),
-			't1' => $temperature->getActualValue(1),
-			'serieH' => $db->getLastDayHumidities(0),
-			'serieT0' => $db->getLastDayTemperatures(0),
-			'serieT1' => $db->getLastDayTemperatures(1),
-		);
-		$this->render('index');
-	}
+require_once "../webapp/autoloader.php";
+
+$humidity = new Service_Humidity();
+$temperature = new Service_Temperature();
+
+$db = new Service_Database();
+
+$now = new DateTime();
+$date = new DateTime();
+$date->sub(new DateInterval('P2D'));
+$interval = new DateInterval('PT15M');
+
+echo "Starting to fill DB from " . $date->format('Y-m-d H:i:s') . '...' . PHP_EOL;
+
+while ($date<$now) {
+	$ts = $date->format('Y-m-d H:i:s');
+	$db->insertTemperature(0, rand(20,25), $ts);
+	$db->insertTemperature(1, rand(22,27), $ts);
+	$db->insertHumidity(0, rand(60,80), $ts);
+
+	$date->add($interval);
+	echo '.';
 }
+
+echo PHP_EOL . "Done!" . PHP_EOL;
+

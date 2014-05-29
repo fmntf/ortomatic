@@ -64,30 +64,38 @@ class Service_Database
 		");
 	}
 	
-	public function insertTemperature($sensorId, $temperature)
+	public function insertTemperature($sensorId, $temperature, $date=null)
 	{
 		$statement = $this->db->prepare("
 			INSERT INTO thermal (sensor_id, value, timestamp)
 			VALUES (:sensorId, :value, :timestamp)
 		");
 		
+		if (!$date) {
+			$date = date('Y-m-d H:i:s');
+		}
+		
 		$statement->bindParam(':sensorId', $sensorId);
 		$statement->bindParam(':value', $temperature);
-		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
+		$statement->bindParam(':timestamp', $date);
 		
 		$statement->execute();
 	}
 	
-	public function insertHumidity($sensorId, $humidity)
+	public function insertHumidity($sensorId, $humidity, $date=null)
 	{
 		$statement = $this->db->prepare("
 			INSERT INTO humidity (sensor_id, value, timestamp)
 			VALUES (:sensorId, :value, :timestamp)
 		");
 		
+		if (!$date) {
+			$date = date('Y-m-d H:i:s');
+		}
+		
 		$statement->bindParam(':sensorId', $sensorId);
 		$statement->bindParam(':value', $humidity);
-		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
+		$statement->bindParam(':timestamp', $date);
 		
 		$statement->execute();
 	}
@@ -105,5 +113,64 @@ class Service_Database
 		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
 		
 		$statement->execute();
+	}
+	
+	public function getLastDayTemperatures($sensorId)
+	{
+		$statement = $this->db->prepare("
+			SELECT value, timestamp
+			FROM thermal
+			WHERE sensor_id = :sensorId
+			AND timestamp > :maxTs
+		");
+		
+		$maxTs = $this->getOneDateAgo();
+		$statement->bindParam(':sensorId', $sensorId);
+		$statement->bindParam(':maxTs', $maxTs);
+		return $this->resultToArray($statement->execute());
+	}
+	
+	public function getLastDayHumidities($sensorId)
+	{
+		$statement = $this->db->prepare("
+			SELECT value, timestamp
+			FROM humidity
+			WHERE sensor_id = :sensorId
+			AND timestamp > :maxTs
+		");
+		
+		$maxTs = $this->getOneDateAgo();
+		$statement->bindParam(':sensorId', $sensorId);
+		$statement->bindParam(':maxTs', $maxTs);
+		return $this->resultToArray($statement->execute());
+	}
+	
+	private function resultToArray(SQLite3Result $result)
+	{
+		$values = [];
+		$labels = [];
+		
+		$i = 0;
+		while ($row = $result->fetchArray(SQLITE3_ASSOC)) { 
+			$values[] = $row['value'];
+			
+			if ($i % 18 == 0) {
+				$date = new DateTime($row['timestamp']);
+				$labels[] = $date->format('H:i');
+			}
+			$i++;
+		}
+		
+		return [
+			'values' => $values,
+			'labels' => $labels
+		];
+	}
+	
+	private function getOneDateAgo()
+	{
+		$maxTs = new DateTime();
+		$maxTs->sub(new DateInterval('P1D'));
+		return $maxTs->format('Y-m-d H:i:s');
 	}
 }

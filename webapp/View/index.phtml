@@ -28,9 +28,25 @@
 		new RGraph.Thermometer('thermoP', 0, 50, t0).grow();
 		new RGraph.Thermometer('thermoA', 0, 50, t1).set('colors', ['orange']).grow();
 		
-		new RGraph.Line('historyT', serieT0).set('colors', ['orange', 'red']).draw();
-		new RGraph.Line('historyT', serieT1).draw();
-		new RGraph.Line('historyH', serieH).set('colors', ['blue']).draw();
+		new RGraph.Line('historyT', serieT0.values)
+			.set('colors', ['orange'])
+			.set('labels', serieT0.labels)
+			.set('ymin', 10)
+			.set('ymax', 40)
+			.draw();
+
+		new RGraph.Line('historyT', serieT1.values)
+			.set('colors', ['red'])
+			.set('ymin', 10)
+			.set('ymax', 40)
+			.draw();
+	
+		new RGraph.Line('historyH', serieH.values)
+			.set('colors', ['blue'])
+			.set('labels', serieH.labels)
+			.set('ymin', 0)
+			.set('ymax', 100)
+			.draw();
 		
 	})
 </script>
