@@ -25,6 +25,6 @@ class Service_Humidity
 {
 	public function getActualValue($sensorId)
 	{
-		return 64;
+		return 64 + rand(-2, +6);
 	}
 }

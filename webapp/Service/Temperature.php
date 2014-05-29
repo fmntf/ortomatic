@@ -25,6 +25,6 @@ class Service_Temperature
 {
 	public function getActualValue($sensorId)
 	{
-		return 20 + 3*$sensorId;
+		return 20 + 3*$sensorId + rand(-2, +6);
 	}
 }
