@@ -23,10 +23,11 @@
 
 class Controller
 {
-	public function __construct($params)
+	public function __construct($params, $thisClass)
 	{
 		$this->params = $params;
 		$this->viewVars = array();
+		$this->className = $thisClass;
 	}
 	
 	protected function render($script)

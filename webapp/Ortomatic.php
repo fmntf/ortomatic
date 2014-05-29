@@ -38,9 +38,9 @@ class Ortomatic
 			$parts = array();
 		}
 		
-		$controller = 'Controller_' . ucfirst($controller);
+		$controllerClass = 'Controller_' . ucfirst($controller);
 		
-		$front = new $controller($parts);
+		$front = new $controllerClass($parts, $controller);
 		$front->run();
 	}
 }
