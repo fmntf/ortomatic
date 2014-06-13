@@ -25,8 +25,8 @@ class Ortomatic
 {
     public function run()
 	{
-		if (array_key_exists('PATH_INFO', $_SERVER)) {
-			$parts = explode('/', $_SERVER['PATH_INFO']);
+		if (array_key_exists('REQUEST_URI', $_SERVER)) {
+			$parts = explode('/', $_SERVER['REQUEST_URI']);
 			array_shift($parts);
 
 			$controller = array_shift($parts);
