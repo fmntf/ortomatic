@@ -40,5 +40,7 @@ class Controller_Configupdate extends Controller
 		$canopyCommand = $command . " -quality 100 -format %c histogram:info: |grep FF0000 |awk '{print $1}' |sed 's/://'";
 		$canopyCommand = '#!/bin/bash' . PHP_EOL . PHP_EOL . $canopyCommand . PHP_EOL;
 		file_put_contents(__DIR__ . '/../../scripts/canopy.sh', $canopyCommand);
+		
+		usleep(300000); // per mostrare il caricamento
 	}
 }

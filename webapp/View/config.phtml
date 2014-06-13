@@ -21,6 +21,7 @@ $(function() {
 			url: '/configupdate/' + config.value + '/' + config.colors,
 			success: function() {
 				$('.salva span').removeClass('glyphicon-refresh').addClass('glyphicon-ok');
+				alert("Configurazione aggiornata!");
 			}
 		});
 	});
