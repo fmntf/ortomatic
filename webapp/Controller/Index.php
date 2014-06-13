@@ -41,7 +41,6 @@ class Controller_Index extends Controller
 			'serieH' => $db->getLastDayHumidities(0),
 			'serieT0' => $db->getLastDayTemperatures(0),
 			'serieT1' => $db->getLastDayTemperatures(1),
-			'canopy' => $webcam->extractCanopy(),
 		);
 		$this->render('index');
 	}
