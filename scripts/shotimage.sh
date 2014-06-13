@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fswebcam -d /dev/video1 -r 640x480 --no-banner ../public/webcam.jpg
+fswebcam -d /dev/video0 -r 640x480 --no-banner ../public/webcam.jpg
