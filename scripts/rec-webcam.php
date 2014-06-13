@@ -23,13 +23,12 @@
 
 require_once "../webapp/autoloader.php";
 
-$humidity = new Service_Humidity();
-$temperature = new Service_Temperature();
-
 $db = new Service_Database();
+$webcam = new Service_Image();
+$webcam->shot();
 
-$db->insertTemperature(0, $temperature->getActualValue(0));
-$db->insertTemperature(1, $temperature->getActualValue(1));
-$db->insertHumidity(0, $humidity->getActualValue(0));
-$db->insertPicture(0, 'xxx.jpg', 12345);
+$fileName = time() . '.jpg';
+copy('../public/webcam.jpg', '../data/pictures/' . $fileName);
+
+$db->insertPicture(0, $fileName, $webcam->extractCanopy());
 

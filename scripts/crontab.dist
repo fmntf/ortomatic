@@ -1,0 +1,5 @@
+# webcam: ogni ora dalle 7 alle 19
+00		07-19	* * *	php /orto/scripts/rec-webcam.php
+
+# sensori: ogni 15 minuti, h24
+*/15	*		* * *	php /orto/scripts/rec-sensors.php
