@@ -28,7 +28,7 @@ class Controller_Preview extends Controller
 		$fuzziness = $this->params[0];
 		$colors = explode('-', $this->params[1]);
 		
-		$originalImage = __DIR__ . '/../../data/pictures/test0.jpg';
+		$originalImage = __DIR__ . '/../../public/webcam.jpg';
 		$tmpFile = "/tmp/" . uniqid('preview') . ".jpg";
 		
 		$command = "convert $originalImage -fuzz $fuzziness% -fill red ";

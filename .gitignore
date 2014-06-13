@@ -1,4 +1,7 @@
 nbproject
 scripts/ngrok.sh
 scripts/canopy.sh
+scripts/canopy-preview.sh
 data/
+public/canopypreview.jpg
+public/webcam.jpg

@@ -25,6 +25,9 @@ class Controller_Config extends Controller
 {
     public function run()
 	{
+		$webcam = new Service_Image();
+		$webcam->shot();
+		
 		$this->render('config');
 	}
 }

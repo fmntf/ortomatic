@@ -21,28 +21,20 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class Controller_Index extends Controller
+class Service_Image
 {
-    public function run()
+	public function shot()
 	{
-		$humidity = new Service_Humidity();
-		$temperature = new Service_Temperature();
-		
-		$db = new Service_Database();
-		
-		$webcam = new Service_Image();
-		$webcam->shot();
-		$webcam->previewCanopy();
-		
-		$this->viewVars = array(
-			'humidity' => $humidity->getActualValue(0),
-			't0' => $temperature->getActualValue(0),
-			't1' => $temperature->getActualValue(1),
-			'serieH' => $db->getLastDayHumidities(0),
-			'serieT0' => $db->getLastDayTemperatures(0),
-			'serieT1' => $db->getLastDayTemperatures(1),
-			'canopy' => $webcam->extractCanopy(),
-		);
-		$this->render('index');
+		exec("sh " . __DIR__ . "/../../scripts/shotimage.sh");
+	}
+	
+	public function extractCanopy()
+	{
+		return exec("sh " . __DIR__ . "/../../scripts/canopy.sh");
+	}
+	
+	public function previewCanopy()
+	{
+		exec("sh " . __DIR__ . "/../../scripts/canopy-preview.sh");
 	}
 }

@@ -8,6 +8,7 @@
 
 .original-img canvas {
 	cursor: cell;
+	max-width: 95%;
 }
 
 .selected-colors div {
@@ -18,3 +19,23 @@
 	background: #BABABA;
 }
 
+img.preview {
+	max-width:95%;
+}
+
+.img-home-preview {
+	position: relative;
+}
+
+.img-home-preview img {
+	position: absolute;
+	top: 0;
+}
+
+.img-home-preview .real {
+	z-index: 100;
+}
+
+.img-home-preview .real:hover {
+	z-index: -1;
+}

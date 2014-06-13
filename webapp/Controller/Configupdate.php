@@ -28,16 +28,17 @@ class Controller_Configupdate extends Controller
 		$fuzziness = $this->params[0];
 		$colors = explode('-', $this->params[1]);
 		
-		$tmpFile = "/tmp/ortowebcam.jpg";
-		
-		$command = "convert /tmp/ortowebcam.jpg -fuzz $fuzziness% -fill red ";
+		$command = "convert ../public/webcam.jpg -fuzz $fuzziness% -fill red ";
 		foreach ($colors as $color) {
 			$command .= "-opaque \"#$color\" ";
 		}
-		$command .= "-quality 100 -format %c histogram:info: |grep FF0000 |awk '{print $1}' |sed 's/://'";
 		
-		$command = '#!/bin/bash' . PHP_EOL . PHP_EOL . $command . PHP_EOL;
+		$previewCommand = $command . " -quality 90 ../public/canopypreview.jpg";
+		$previewCommand = '#!/bin/bash' . PHP_EOL . PHP_EOL . $previewCommand . PHP_EOL;
+		file_put_contents(__DIR__ . '/../../scripts/canopy-preview.sh', $previewCommand);
 		
-		file_put_contents(__DIR__ . '/../../scripts/canopy.sh', $command);
+		$canopyCommand = $command . " -quality 100 -format %c histogram:info: |grep FF0000 |awk '{print $1}' |sed 's/://'";
+		$canopyCommand = '#!/bin/bash' . PHP_EOL . PHP_EOL . $canopyCommand . PHP_EOL;
+		file_put_contents(__DIR__ . '/../../scripts/canopy.sh', $canopyCommand);
 	}
 }

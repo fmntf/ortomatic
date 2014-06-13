@@ -145,6 +145,61 @@ class Service_Database
 		return $this->resultToArray($statement->execute());
 	}
 	
+	public function getStats()
+	{
+		$statement = $this->db->prepare("
+			SELECT COUNT(*) AS count FROM thermal
+				UNION ALL
+			SELECT COUNT(*) AS count FROM humidity
+				UNION ALL
+			SELECT COUNT(*) AS count FROM picture
+		");
+		
+		$result = $statement->execute();
+		$total = 0;
+		
+		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+			$total += $row['count'];
+		}
+		
+		return $total;
+	}
+	
+	public function exportData()
+	{
+		$statement = $this->db->prepare("
+			SELECT timestamp, sensor_id, 'temp' AS type, value FROM thermal
+				UNION ALL
+			SELECT timestamp, sensor_id, 'hum' AS type, value FROM humidity
+				UNION ALL
+			SELECT timestamp, camera_id AS sensor_id, 'canopy' AS type, estimated_canopy AS value FROM picture
+
+			ORDER BY timestamp
+		");
+		
+		$result = $statement->execute();
+		$header = array('timestamp');
+		$data = array();
+		
+		while ($row = $result->fetchArray(SQLITE3_ASSOC)) { 
+			$ts = $row['timestamp'];
+			if (!array_key_exists($ts, $data)) {
+				$data[$ts] = array(
+					'timestamp' => $ts,
+				);
+			}
+			
+			$type = $row['type'] . $row['sensor_id'];
+			if (!in_array($type, $header)) {
+				$header[] = $type;
+			}
+			
+			$data[$ts][$type] = $row['value'];
+		}
+		
+		return array($data, $header);
+	}
+	
 	private function resultToArray(SQLite3Result $result)
 	{
 		$values = [];
