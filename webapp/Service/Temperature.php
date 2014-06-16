@@ -25,6 +25,14 @@ class Service_Temperature
 {
 	public function getActualValue($sensorId)
 	{
+		if ($sensorId == 0) {
+			$raw = file_get_contents("/sys/bus/w1/devices/28-000005036b8b/w1_slave");
+			$parts = explode(" t=", trim($raw));
+
+			return $parts[1] / 1000;
+		}
+		
+		
 		return 20 + 3*$sensorId + rand(-2, +6);
 	}
 }
