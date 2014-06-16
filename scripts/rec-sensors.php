@@ -22,6 +22,7 @@
  */
 
 require_once "../webapp/autoloader.php";
+system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
 
 $humidity = new Service_Humidity();
 $temperature = new Service_Temperature();
@@ -32,3 +33,6 @@ $db->insertTemperature(0, $temperature->getActualValue(0));
 $db->insertTemperature(1, $temperature->getActualValue(1));
 $db->insertHumidity(0, $humidity->getActualValue(0));
 $db->insertHumidity(1, $humidity->getActualValue(1));
+
+// stop the led
+system("kill `ps u |grep blink\-led\.php |grep -v grep |awk '{print $2}'`");

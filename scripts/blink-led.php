@@ -21,17 +21,18 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-require_once "../webapp/autoloader.php";
-system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
+$exported = is_dir("/sys/class/gpio/gpio25/");
+if (!$exported) {
+	echo "Exporting GPIO 25..." . PHP_EOL;
+	system("echo 25 > /sys/class/gpio/export");
+	system("echo out > /sys/class/gpio/gpio25/direction");
+}
 
-$db = new Service_Database();
-$webcam = new Service_Image();
-$webcam->shot();
+echo "Blinking forever..." . PHP_EOL;
 
-$fileName = time() . '.jpg';
-copy('../public/webcam.jpg', '../data/pictures/' . $fileName);
-
-$db->insertPicture(0, $fileName, $webcam->extractCanopy());
-
-// stop the led
-system("kill `ps u |grep blink\-led\.php |grep -v grep |awk '{print $2}'`");
+while (true) {
+	system("echo 1 > /sys/class/gpio/gpio25/value");
+	usleep(300000);
+	system("echo 0 > /sys/class/gpio/gpio25/value");
+	usleep(300000);
+}
