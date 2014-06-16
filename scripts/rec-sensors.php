@@ -35,4 +35,4 @@ $db->insertHumidity(0, $humidity->getActualValue(0));
 $db->insertHumidity(1, $humidity->getActualValue(1));
 
 // stop the led
-system("kill `ps u |grep blink\-led\.php |grep -v grep |awk '{print $2}'`");
+system("sh stop-led.sh");

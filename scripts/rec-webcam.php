@@ -34,4 +34,4 @@ copy('../public/webcam.jpg', '../data/pictures/' . $fileName);
 $db->insertPicture(0, $fileName, $webcam->extractCanopy());
 
 // stop the led
-system("kill `ps u |grep blink\-led\.php |grep -v grep |awk '{print $2}'`");
+system("sh stop-led.sh");
