@@ -100,17 +100,21 @@ class Service_Database
 		$statement->execute();
 	}
 	
-	public function insertPicture($cameraId, $filename, $estimatedCanopy)
+	public function insertPicture($cameraId, $filename, $estimatedCanopy, $date = null)
 	{
 		$statement = $this->db->prepare("
 			INSERT INTO picture (camera_id, filename, estimated_canopy, timestamp)
 			VALUES (:cameraId, :filename, :estimatedCanopy, :timestamp)
 		");
 		
+		if (!$date) {
+			$date = date('Y-m-d H:i:s');
+		}
+		
 		$statement->bindParam(':cameraId', $cameraId);
 		$statement->bindParam(':filename', $filename);
 		$statement->bindParam(':estimatedCanopy', $estimatedCanopy);
-		$statement->bindParam(':timestamp', date('Y-m-d H:i:s'));
+		$statement->bindParam(':timestamp', $date);
 		
 		$statement->execute();
 	}

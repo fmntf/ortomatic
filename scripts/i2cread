@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use HiPi::Device::I2C;
+
+my $devaddress= 0x27;
+my $dev = HiPi::Device::I2C->new( address => $devaddress );
+$dev->i2c_write_error();
+
+my @data= $dev->i2c_read( 4);
+my $humid= (($data[0] & 0x3f) * 256 + $data[1]) / 0x3fff * 100;
+my $temp= (($data[2] *256 + $data[3]) >> 2) / 0x3fff * 165 - 40;
+
+print "$humid --- $temp\n";
+
+exit;
+

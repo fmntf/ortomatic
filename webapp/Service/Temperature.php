@@ -26,13 +26,20 @@ class Service_Temperature
 	public function getActualValue($sensorId)
 	{
 		if ($sensorId == 0) {
+			chdir(__DIR__ . "/../../scripts");
+			$result = trim(exec("./i2cread"));
+			$parts = explode(' --- ', $result);
+
+			return number_format((float)$parts[1], 3);
+		}
+		
+		if ($sensorId == 1) {
 			$raw = file_get_contents("/sys/bus/w1/devices/28-000005036b8b/w1_slave");
 			$parts = explode(" t=", trim($raw));
 
 			return $parts[1] / 1000;
 		}
 		
-		
-		return 20 + 3*$sensorId + rand(-2, +6);
+		throw new Exception("Sensore $sensorId non disponibile");
 	}
 }

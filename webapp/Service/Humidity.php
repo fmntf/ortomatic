@@ -25,6 +25,14 @@ class Service_Humidity
 {
 	public function getActualValue($sensorId)
 	{
-		return 64 + rand(-2, +6);
+		if ($sensorId <> 0) {
+			throw new Exception("Sensore $sensorId non disponibile");
+		}
+		
+		chdir(__DIR__ . "/../../scripts");
+		$result = trim(exec("./i2cread"));
+		$parts = explode(' --- ', $result);
+		
+		return number_format((float)$parts[0], 3);
 	}
 }
