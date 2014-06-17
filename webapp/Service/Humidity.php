@@ -30,7 +30,7 @@ class Service_Humidity
 		}
 		
 		chdir(__DIR__ . "/../../scripts");
-		$result = trim(exec("./i2cread"));
+		$result = trim(exec("perl i2cread"));
 		$parts = explode(' --- ', $result);
 		
 		return number_format((float)$parts[0], 3);

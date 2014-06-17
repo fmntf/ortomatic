@@ -27,7 +27,7 @@ class Service_Temperature
 	{
 		if ($sensorId == 0) {
 			chdir(__DIR__ . "/../../scripts");
-			$result = trim(exec("./i2cread"));
+			$result = trim(exec("perl i2cread"));
 			$parts = explode(' --- ', $result);
 
 			return number_format((float)$parts[1], 3);
