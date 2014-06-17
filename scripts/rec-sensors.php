@@ -25,15 +25,16 @@ chdir(__DIR__);
 require_once "../webapp/autoloader.php";
 system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
 
+$date = date('Y-m-d H:i');
+
 $humidity = new Service_Humidity();
 $temperature = new Service_Temperature();
-
 $db = new Service_Database();
 
-$db->insertTemperature(0, $temperature->getActualValue(0));
-$db->insertTemperature(1, $temperature->getActualValue(1));
-$db->insertHumidity(0, $humidity->getActualValue(0));
-$db->insertHumidity(1, $humidity->getActualValue(1));
+$db->insertTemperature(0, $temperature->getActualValue(0), $date);
+$db->insertTemperature(1, $temperature->getActualValue(1), $date);
+$db->insertHumidity(0, $humidity->getActualValue(0), $date);
+$db->insertHumidity(1, $humidity->getActualValue(1), $date);
 
 // stop the led
 system("sh stop-led.sh");

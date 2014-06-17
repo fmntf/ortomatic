@@ -25,6 +25,8 @@ chdir(__DIR__);
 require_once "../webapp/autoloader.php";
 system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
 
+$date = date('Y-m-d H:i');
+
 $db = new Service_Database();
 $webcam = new Service_Image();
 $webcam->shot();
@@ -32,7 +34,7 @@ $webcam->shot();
 $fileName = time() . '.jpg';
 copy('../public/webcam.jpg', '../data/pictures/' . $fileName);
 
-$db->insertPicture(0, $fileName, $webcam->extractCanopy());
+$db->insertPicture(0, $fileName, $webcam->extractCanopy(), $date);
 
 // stop the led
 system("sh stop-led.sh");
