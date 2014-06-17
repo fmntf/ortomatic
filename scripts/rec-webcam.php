@@ -21,6 +21,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
+chdir(__DIR__);
 require_once "../webapp/autoloader.php";
 system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
 

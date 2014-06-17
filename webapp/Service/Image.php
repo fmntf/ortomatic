@@ -23,18 +23,23 @@
 
 class Service_Image
 {
+	public function __construct()
+	{
+		chdir(__DIR__ . "/../../scripts");
+	}
+	
 	public function shot()
 	{
-		exec("sh " . __DIR__ . "/../../scripts/shotimage.sh");
+		exec("sh shotimage.sh");
 	}
 	
 	public function extractCanopy()
 	{
-		return exec("sh " . __DIR__ . "/../../scripts/canopy.sh");
+		return exec("sh canopy.sh");
 	}
 	
 	public function previewCanopy()
 	{
-		exec("sh " . __DIR__ . "/../../scripts/canopy-preview.sh");
+		exec("sh canopy-preview.sh");
 	}
 }
