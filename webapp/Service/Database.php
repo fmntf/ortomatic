@@ -168,36 +168,51 @@ class Service_Database
 	public function exportData()
 	{
 		$statement = $this->db->prepare("
-			SELECT timestamp, sensor_id, 'temp' AS type, value FROM thermal
+			SELECT timestamp, 'temp' || sensor_id AS type, value FROM thermal
 				UNION ALL
-			SELECT timestamp, sensor_id, 'hum' AS type, value FROM humidity
+			SELECT timestamp, 'hum' || sensor_id AS type, value FROM humidity
 				UNION ALL
-			SELECT timestamp, camera_id AS sensor_id, 'canopy' AS type, estimated_canopy AS value FROM picture
+			SELECT timestamp, 'canopy' || camera_id AS type, estimated_canopy AS value FROM picture
 
 			ORDER BY timestamp
 		");
 		
 		$result = $statement->execute();
-		$header = array('timestamp');
+		$header = $this->getExportHeader();
 		$data = array();
 		
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) { 
 			$ts = $row['timestamp'];
 			if (!array_key_exists($ts, $data)) {
-				$data[$ts] = array(
-					'timestamp' => $ts,
-				);
+				$data[$ts] = $header;
+				$data[$ts]['timestamp'] = $ts;
 			}
 			
-			$type = $row['type'] . $row['sensor_id'];
-			if (!in_array($type, $header)) {
-				$header[] = $type;
-			}
-			
+			$type = $row['type'];
 			$data[$ts][$type] = $row['value'];
 		}
 		
-		return array($data, $header);
+		return array($data, array_keys($header));
+	}
+	
+	private function getExportHeader()
+	{
+		$statement = $this->db->prepare("
+			SELECT DISTINCT 'temp' || sensor_id AS header FROM thermal
+				UNION ALL
+			SELECT DISTINCT 'hum' || sensor_id AS header FROM humidity
+				UNION ALL
+			SELECT DISTINCT 'canopy' || camera_id AS header FROM picture
+		");
+		
+		$result = $statement->execute();
+		$header = array('timestamp' => null);
+		
+		while ($row = $result->fetchArray(SQLITE3_ASSOC)) { 
+			$header[$row['header']] = null;
+		}
+		
+		return $header;
 	}
 	
 	private function resultToArray(SQLite3Result $result)
