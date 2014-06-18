@@ -27,6 +27,11 @@ if (!$exported) {
 	system("echo 25 > /sys/class/gpio/export");
 }
 
+$runningProcesses = trim(exec("ps aux |grep blink\-led\.php |grep -v grep |wc -l"));
+if ($runningProcesses > 1) {
+	exit();
+}
+
 system("echo out > /sys/class/gpio/gpio25/direction");
 
 echo "Blinking forever..." . PHP_EOL;
