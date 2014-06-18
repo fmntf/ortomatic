@@ -25,8 +25,9 @@ $exported = is_dir("/sys/class/gpio/gpio25/");
 if (!$exported) {
 	echo "Exporting GPIO 25..." . PHP_EOL;
 	system("echo 25 > /sys/class/gpio/export");
-	system("echo out > /sys/class/gpio/gpio25/direction");
 }
+
+system("echo out > /sys/class/gpio/gpio25/direction");
 
 echo "Blinking forever..." . PHP_EOL;
 
