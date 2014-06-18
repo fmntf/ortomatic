@@ -35,6 +35,3 @@ $fileName = time() . '.jpg';
 copy('../public/webcam.jpg', '../data/pictures/' . $fileName);
 
 $db->insertPicture(0, $fileName, $webcam->extractCanopy(), $date);
-
-// stop the led
-system("sh stop-led.sh");

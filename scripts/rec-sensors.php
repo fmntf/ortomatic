@@ -35,6 +35,3 @@ $db->insertTemperature(0, $temperature->getActualValue(0), $date);
 $db->insertTemperature(1, $temperature->getActualValue(1), $date);
 $db->insertHumidity(0, $humidity->getActualValue(0), $date);
 $db->insertHumidity(1, $humidity->getActualValue(1), $date);
-
-// stop the led
-system("sh stop-led.sh");

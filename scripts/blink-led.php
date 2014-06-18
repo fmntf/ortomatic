@@ -34,6 +34,8 @@ if ($runningProcesses > 1) {
 
 system("echo out > /sys/class/gpio/gpio25/direction");
 
+system("sh stop-led.sh > /dev/null 2>&1 &"); // stop led (contiene delay)
+
 echo "Blinking forever..." . PHP_EOL;
 
 while (true) {
