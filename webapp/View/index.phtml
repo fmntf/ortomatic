@@ -3,7 +3,10 @@
 		<canvas id="humidity" width="350" height="350" style="width:50%"></canvas>
 		<canvas id="thermoP" width="105" height="340" style="width:16%"></canvas>
 		<canvas id="thermoA" width="105" height="340" style="width:16%"></canvas>
-		<p>Temperatura: <span class="vaso">vaso</span> e <span class="laboratorio">laboratorio</span>, valori attuali [°C]</p>
+		<p>Valori attuali: Temperatura: <span class="vaso">vaso</span> => <?php echo $t0; ?>; 
+			<span class="laboratorio">laboratorio</span> => <?php echo $t1; ?>;
+			umidità vaso => <?php echo $humidity; ?>
+		</p>
 		
 		<div class="img-home-preview">
 			<img src="/webcam.jpg" class="real">
@@ -29,7 +32,7 @@
 			serieT0 = <?php echo json_encode($serieT0); ?>,
 			serieT1 = <?php echo json_encode($serieT1); ?>;
 		
-		new RGraph.Gauge('humidity', 0, 100, humidity).set('title', 'Umidità').grow();
+		new RGraph.Gauge('humidity', 0, 100, humidity).grow();
 		new RGraph.Thermometer('thermoP', 0, 50, t0).grow();
 		new RGraph.Thermometer('thermoA', 0, 50, t1).set('colors', ['orange']).grow();
 		
