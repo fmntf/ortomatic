@@ -34,13 +34,13 @@ if ($runningProcesses > 1) {
 
 system("echo out > /sys/class/gpio/gpio25/direction");
 
-system("sh stop-led.sh > /dev/null 2>&1 &"); // stop led (contiene delay)
+echo "Blinking..." . PHP_EOL;
+$msecToBlink = 30 * 1000;
 
-echo "Blinking forever..." . PHP_EOL;
-
-while (true) {
+while ($msecToBlink > 0) {
 	system("echo 1 > /sys/class/gpio/gpio25/value");
 	usleep(300000);
 	system("echo 0 > /sys/class/gpio/gpio25/value");
 	usleep(300000);
+	$msecToBlink -= 600;
 }
