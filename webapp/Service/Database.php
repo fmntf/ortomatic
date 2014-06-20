@@ -128,7 +128,7 @@ class Service_Database
 			AND timestamp > :maxTs
 		");
 		
-		$maxTs = $this->getOneDateAgo();
+		$maxTs = $this->getOneDayAgo();
 		$statement->bindParam(':sensorId', $sensorId);
 		$statement->bindParam(':maxTs', $maxTs);
 		return $this->resultToArray($statement->execute());
@@ -143,10 +143,25 @@ class Service_Database
 			AND timestamp > :maxTs
 		");
 		
-		$maxTs = $this->getOneDateAgo();
+		$maxTs = $this->getOneDayAgo();
 		$statement->bindParam(':sensorId', $sensorId);
 		$statement->bindParam(':maxTs', $maxTs);
 		return $this->resultToArray($statement->execute());
+	}
+	
+	public function getLastWeekCanopies($cameraId)
+	{
+		$statement = $this->db->prepare("
+			SELECT estimated_canopy, timestamp
+			FROM picture
+			WHERE camera_id = :cameraId
+			AND timestamp > :maxTs
+		");
+		
+		$maxTs = $this->getOneWeekAgo();
+		$statement->bindParam(':cameraId', $cameraId);
+		$statement->bindParam(':maxTs', $maxTs);
+		return $this->resultToArray($statement->execute(), true);
 	}
 	
 	public function getStats()
@@ -219,18 +234,26 @@ class Service_Database
 		return $header;
 	}
 	
-	private function resultToArray(SQLite3Result $result)
+	private function resultToArray(SQLite3Result $result, $canopy = false)
 	{
 		$values = [];
 		$labels = [];
 		
 		$i = 0;
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) { 
-			$values[] = $row['value'];
+			if ($canopy) {
+				$values[] = (int) $row['estimated_canopy'] / 1000;
+			} else {
+				$values[] = $row['value'];
+			}
 			
 			if ($i % 18 == 0) {
 				$date = new DateTime($row['timestamp']);
-				$labels[] = $date->format('H:i');
+				if ($canopy) {
+					$labels[] = $date->format('d/m');
+				} else {
+					$labels[] = $date->format('H:i');
+				}
 			}
 			$i++;
 		}
@@ -241,10 +264,17 @@ class Service_Database
 		];
 	}
 	
-	private function getOneDateAgo()
+	private function getOneDayAgo()
 	{
 		$maxTs = new DateTime();
 		$maxTs->sub(new DateInterval('P1D'));
+		return $maxTs->format('Y-m-d H:i:s');
+	}
+	
+	private function getOneWeekAgo()
+	{
+		$maxTs = new DateTime();
+		$maxTs->sub(new DateInterval('P7D'));
 		return $maxTs->format('Y-m-d H:i:s');
 	}
 }

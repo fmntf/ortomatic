@@ -27,12 +27,9 @@ img.preview {
 	position: relative;
 }
 
-.img-home-preview img {
+.img-home-preview .real {
 	position: absolute;
 	top: 0;
-}
-
-.img-home-preview .real {
 	z-index: 100;
 }
 

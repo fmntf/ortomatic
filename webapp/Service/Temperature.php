@@ -25,6 +25,10 @@ class Service_Temperature
 {
 	public function getActualValue($sensorId)
 	{
+		if (gethostname() == 'n550jk') {
+			return rand(20, 25);
+		}
+		
 		if ($sensorId == 0) {
 			chdir(__DIR__ . "/../../scripts");
 			$result = trim(exec("perl i2cread"));

@@ -25,7 +25,11 @@ class Service_Humidity
 {
 	public function getActualValue($sensorId)
 	{
-		if ($sensorId <> 0) {
+		if (gethostname() == 'n550jk') {
+			return rand(40, 60);
+		}
+		
+		if ($sensorId != 0) {
 			throw new Exception("Sensore $sensorId non disponibile");
 		}
 		

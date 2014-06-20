@@ -39,6 +39,7 @@ class Controller_Index extends Controller
 			't0' => $temperature->getActualValue(0),
 			't1' => $temperature->getActualValue(1),
 			'serieH' => $db->getLastDayHumidities(0),
+			'serieC' => $db->getLastWeekCanopies(0),
 			'serieT0' => $db->getLastDayTemperatures(0),
 			'serieT1' => $db->getLastDayTemperatures(1),
 		);
