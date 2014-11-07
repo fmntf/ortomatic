@@ -20,20 +20,20 @@
 					<ul class="nav nav-tabs" style="margin-top: 10px;">
 						<li style="font-size: 18px; line-height: 40px; margin-right: 15px;">Ort-o-Matic</li>
 						<?php
-						$menu = [
-							[
+						$menu = array(
+							array(
 								'controller' => 'index',
 								'name' => 'Dashboard',
-							],
-							[
+							),
+							array(
 								'controller' => 'export',
 								'name' => 'Export dati',
-							],
-							[
+							),
+							array(
 								'controller' => 'config',
 								'name' => 'Configurazione webcam',
-							],
-						];
+							),
+						);
 						
 						foreach ($menu as $item) {
 							$attrs = '';

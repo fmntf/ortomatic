@@ -236,8 +236,8 @@ class Service_Database
 	
 	private function resultToArray(SQLite3Result $result, $canopy = false)
 	{
-		$values = [];
-		$labels = [];
+		$values = array();
+		$labels = array();
 		
 		$i = 0;
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) { 
@@ -258,10 +258,10 @@ class Service_Database
 			$i++;
 		}
 		
-		return [
+		return array(
 			'values' => $values,
 			'labels' => $labels
-		];
+		);
 	}
 	
 	private function getOneDayAgo()
