@@ -21,6 +21,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
+if (file_exists("/etc/udoo-config.conf")) {
+	die("Not implemented on Udoo boards.");
+}
+
 $exported = is_dir("/sys/class/gpio/gpio25/");
 if (!$exported) {
 	echo "Exporting GPIO 25..." . PHP_EOL;

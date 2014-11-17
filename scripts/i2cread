@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+#raspberry only
+
 use HiPi::Device::I2C;
 
 my $devaddress= 0x27;

@@ -23,7 +23,10 @@
 
 chdir(__DIR__);
 require_once "../webapp/autoloader.php";
-system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
+
+if (!file_exists("/etc/udoo-config.conf")) {
+	system("php blink-led.php > /dev/null 2>&1 &"); // start led blink
+}
 
 $date = date('Y-m-d H:i');
 
@@ -31,7 +34,31 @@ $humidity = new Service_Humidity();
 $temperature = new Service_Temperature();
 $db = new Service_Database();
 
+if (file_exists("/etc/udoo-config.conf")) {
+	system("stty -F /dev/ttymxc3 cs8 9600 ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl noflsh -ixon -crtscts");
+	$serial = createPhpSerial();
+	
+	$serial->sendMessage("u",5);
+	$serial->readPort();
+	
+	$humidity->setPhpSerial($serial);
+	$temperature->setPhpSerial($serial);
+}
+
+
 $db->insertTemperature(0, $temperature->getActualValue(0), $date);
 $db->insertTemperature(1, $temperature->getActualValue(1), $date);
 $db->insertHumidity(0, $humidity->getActualValue(0), $date);
-$db->insertHumidity(1, $humidity->getActualValue(1), $date);
+
+
+function createPhpSerial()
+{
+	$serial = new PhpSerial;
+	$serial->deviceSet("/dev/ttymxc3");
+	$serial->confBaudRate(9600);
+	$serial->deviceOpen('w+');
+	stream_set_timeout($serial->_dHandle, 10);
+	$serial->serialFlush();	
+
+	return $serial;
+}

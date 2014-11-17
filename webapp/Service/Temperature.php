@@ -25,25 +25,42 @@ class Service_Temperature
 {
 	public function getActualValue($sensorId)
 	{
-		if (gethostname() == 'n550jk') {
-			return rand(20, 25);
-		}
-		
-		if ($sensorId == 0) {
-			chdir(__DIR__ . "/../../scripts");
-			$result = trim(exec("perl i2cread"));
-			$parts = explode(' --- ', $result);
+		if (file_exists("/etc/udoo-config.conf")) {
+			
+			if ($sensorId == 0) {
+				$this->phpSerial->sendMessage("t", 0.5);
+				return trim($this->phpSerial->readPort());
+			}
 
-			return number_format((float)$parts[1], 3);
-		}
-		
-		if ($sensorId == 1) {
-			$raw = file_get_contents("/sys/bus/w1/devices/28-000005036b8b/w1_slave");
-			$parts = explode(" t=", trim($raw));
+			if ($sensorId == 1) {
+				$this->phpSerial->sendMessage("T", 1.5);
+				return trim($this->phpSerial->readPort());
+			}
+		} else {
+			
+			if ($sensorId == 0) {
+				chdir(__DIR__ . "/../../scripts");
+				$result = trim(exec("perl i2cread"));
+				$parts = explode(' --- ', $result);
 
-			return $parts[1] / 1000;
+				return number_format((float)$parts[1], 3);
+			}
+
+			if ($sensorId == 1) {
+				$raw = file_get_contents("/sys/bus/w1/devices/28-000005036b8b/w1_slave");
+				$parts = explode(" t=", trim($raw));
+
+				return $parts[1] / 1000;
+			}
 		}
-		
+			
 		throw new Exception("Sensore $sensorId non disponibile");
+	}
+	
+	private $phpSerial;
+	
+	public function setPhpSerial(Service_PhpSerial $serial)
+	{
+		$this->phpSerial = $serial;
 	}
 }

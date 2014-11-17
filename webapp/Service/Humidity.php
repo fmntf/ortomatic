@@ -25,18 +25,26 @@ class Service_Humidity
 {
 	public function getActualValue($sensorId)
 	{
-		if (gethostname() == 'n550jk') {
-			return rand(40, 60);
-		}
-		
 		if ($sensorId != 0) {
 			throw new Exception("Sensore $sensorId non disponibile");
 		}
 		
-		chdir(__DIR__ . "/../../scripts");
-		$result = trim(exec("perl i2cread"));
-		$parts = explode(' --- ', $result);
-		
-		return number_format((float)$parts[0], 3);
+		if (file_exists("/etc/udoo-config.conf")) {
+			$this->phpSerial->sendMessage("h", 0.5);
+			return trim($this->phpSerial->readPort());
+
+		} else {
+			chdir(__DIR__ . "/../../scripts");
+			$result = trim(exec("perl i2cread"));
+			$parts = explode(' --- ', $result);
+			return number_format((float)$parts[0], 3);
+		}
+	}
+	
+	private $phpSerial;
+	
+	public function setPhpSerial(Service_PhpSerial $serial)
+	{
+		$this->phpSerial = $serial;
 	}
 }
