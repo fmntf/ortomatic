@@ -53,7 +53,7 @@ $db->insertHumidity(0, $humidity->getActualValue(0), $date);
 
 function createPhpSerial()
 {
-	$serial = new PhpSerial;
+	$serial = new Service_PhpSerial;
 	$serial->deviceSet("/dev/ttymxc3");
 	$serial->confBaudRate(9600);
 	$serial->deviceOpen('w+');
