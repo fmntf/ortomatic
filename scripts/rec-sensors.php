@@ -45,11 +45,18 @@ if (file_exists("/etc/udoo-config.conf")) {
 	$temperature->setPhpSerial($serial);
 }
 
+$temp0 = $temperature->getActualValue(0);
+$temp1 = $temperature->getActualValue(1);
+$humi0 = $humidity->getActualValue(0);
 
-$db->insertTemperature(0, $temperature->getActualValue(0), $date);
-$db->insertTemperature(1, $temperature->getActualValue(1), $date);
-$db->insertHumidity(0, $humidity->getActualValue(0), $date);
+$db->insertTemperature(0, $temp0, $date);
+$db->insertTemperature(1, $temp1, $date);
+$db->insertHumidity(0, $humi0, $date);
 
+echo "Inserted:
+  - temp 0 = $temp0
+  - temp 1 = $temp1
+  - humi 0 = $humi0" . PHP_EOL;
 
 function createPhpSerial()
 {
