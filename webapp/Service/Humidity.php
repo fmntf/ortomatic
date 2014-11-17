@@ -31,7 +31,7 @@ class Service_Humidity
 		
 		if (file_exists("/etc/udoo-config.conf")) {
 			$this->phpSerial->sendMessage("h", 0.5);
-			return trim($this->phpSerial->readPort());
+			return trim($this->phpSerial->readPort()*100);
 
 		} else {
 			chdir(__DIR__ . "/../../scripts");
