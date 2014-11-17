@@ -28,6 +28,17 @@ class Controller_Index extends Controller
 		$humidity = new Service_Humidity();
 		$temperature = new Service_Temperature();
 		
+		if (file_exists("/etc/udoo-config.conf")) {
+			system("stty -F /dev/ttymxc3 cs8 9600 ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl noflsh -ixon -crtscts");
+			$serial = $this->createPhpSerial();
+
+			$serial->sendMessage("u",5);
+			$serial->readPort();
+
+			$humidity->setPhpSerial($serial);
+			$temperature->setPhpSerial($serial);
+		}
+		
 		$db = new Service_Database();
 		
 		$webcam = new Service_Image();
@@ -45,4 +56,17 @@ class Controller_Index extends Controller
 		);
 		$this->render('index');
 	}
+	
+	private function createPhpSerial()
+	{
+		$serial = new Service_PhpSerial;
+		$serial->deviceSet("/dev/ttymxc3");
+		$serial->confBaudRate(9600);
+		$serial->deviceOpen('w+');
+		stream_set_timeout($serial->_dHandle, 10);
+		$serial->serialFlush();	
+
+		return $serial;
+	}
+
 }
